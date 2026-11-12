@@ -14,15 +14,33 @@
   .muted { color: var(--muted); }
   a { color: #73eff7; }
   nav a { margin-right: 16px; }
+  [data-lang="pl"] .l-en, [data-lang="en"] .l-pl { display: none; }
+  nav a.on { color: var(--gold); text-decoration: none; }
 </style>
-</head>
+<script>
+  (function () {
+    var h = location.hash.slice(1);
+    var lang = (h === "pl" || h === "en") ? h : ((navigator.language || "").toLowerCase().indexOf("pl") === 0 ? "pl" : "en");
+    document.documentElement.setAttribute("data-lang", lang);
+    document.documentElement.lang = lang;
+    window.addEventListener("hashchange", function () {
+      var n = location.hash.slice(1);
+      if (n === "pl" || n === "en") { document.documentElement.setAttribute("data-lang", n); document.documentElement.lang = n; mark(); window.scrollTo(0, 0); }
+    });
+    function mark() {
+      var l = document.documentElement.getAttribute("data-lang");
+      document.querySelectorAll("nav a[href^='#']").forEach(function (a) { a.className = a.getAttribute("href") === "#" + l ? "on" : ""; });
+    }
+    document.addEventListener("DOMContentLoaded", mark);
+  })();
+</script></head>
 <body>
 <main>
 <h1>Incantato</h1>
-<p class="muted">Regulamin · Terms of Service - obowiązuje od / effective from 2026-11-12</p>
-<nav><a href="#pl">Polski</a><a href="#en">English</a><a href="../">Polityka prywatności / Privacy Policy</a></nav>
+<p class="muted"><span class="l-pl">Regulamin - obowiązuje od 2026-11-12</span><span class="l-en">Terms of Service - effective from 2026-11-12</span></p>
+<nav><a href="#pl">Polski</a><a href="#en">English</a><a href="../"><span class="l-pl">Polityka prywatności</span><span class="l-en">Privacy Policy</span></a></nav>
 
-<section id="pl">
+<section id="pl" class="l-pl">
 <h2>Regulamin (PL)</h2>
 <p>Ten regulamin dotyczy gry mobilnej Incantato na Androida (dalej „gra”), wydawanej przez Marcina Spychalskiego (dalej „twórca”). Instalując grę lub z niej korzystając, akceptujesz ten regulamin. Sposób przetwarzania danych opisuje osobna <a href="../">Polityka prywatności</a>.</p>
 
@@ -57,7 +75,7 @@
 <p>Marcin Spychalski · <a href="mailto:derst094@gmail.com">derst094@gmail.com</a> · Discord: <a href="https://discord.gg/Pj3Ra7NFuf">discord.gg/Pj3Ra7NFuf</a></p>
 </section>
 
-<section id="en" lang="en">
+<section id="en" lang="en" class="l-en">
 <h2>Terms of Service (EN)</h2>
 <p>These terms apply to the Incantato mobile game for Android (“the game”), published by Marcin Spychalski (“the developer”). By installing or using the game you accept these terms. How data is processed is described in the separate <a href="../">Privacy Policy</a>.</p>
 
